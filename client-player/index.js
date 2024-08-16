@@ -1,13 +1,13 @@
 document.getElementById("post-button").addEventListener("click", createUser);
 const input = document.getElementById("input")
-const selectedOption = document.querySelector('input[name="option"]:checked')
 
 
 
 async function createUser() {
   renderLoadingState();
-  
   try {
+    const selectedOption = document.querySelector('input[name="option"]:checked');
+    console.log("efew"+selectedOption)
     const player = {
       name: input.value,
       //option: selectedOption.value,
