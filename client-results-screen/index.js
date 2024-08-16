@@ -40,7 +40,7 @@ function renderData(data) {
       const div = document.createElement("div");
       div.className = "item";
       div.innerHTML = item.name;
-      div.innerHTML = `<img src="${item.profilePicture}" /><p>${item.name}</p>`;
+      div.innerHTML = `<img src="${item.profilePicture}" /><p>${item.name}</p>` `<p>${item.option}</p>`;
       container.appendChild(div);
     });
   }

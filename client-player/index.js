@@ -1,12 +1,16 @@
 document.getElementById("post-button").addEventListener("click", createUser);
 const input = document.getElementById("input")
+const selectedOption = document.querySelector('input[name="option"]:checked')
+
+
 
 async function createUser() {
   renderLoadingState();
-
+  
   try {
     const player = {
       name: input.value,
+      //option: selectedOption.value,
       profilePicture: "https://avatar.iran.liara.run/public/13", // if you want to generate random images for user profile go to this link: https://avatar-placeholder.iran.liara.run/
     };
 
