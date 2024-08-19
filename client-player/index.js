@@ -1,33 +1,63 @@
 document.getElementById("post-button").addEventListener("click", createUser);
-const input = document.getElementById("input")
-
-
+const input = document.getElementById("input");
 
 async function createUser() {
   renderLoadingState();
+  let existingUser = null; // Move the declaration outside the try-catch block
+  
   try {
     const selectedOption = document.querySelector('input[name="option"]:checked');
-    console.log("efew"+selectedOption)
+    
+    try {
+      const response = await fetch(`http://localhost:5050/user?name=${input.value}`);
+      
+      if (response.ok) {
+        existingUser = await response.json(); // Parse the user if found
+      } else {
+        console.log("User not found, proceeding to create new user");
+      }
+    } catch (error) {
+      console.log("Error while fetching user:", error);
+    }
+    
     const player = {
       name: input.value,
-      //option: selectedOption.value,
-      profilePicture: "https://avatar.iran.liara.run/public/13", // if you want to generate random images for user profile go to this link: https://avatar-placeholder.iran.liara.run/
+      option: selectedOption.value,
+      profilePicture: "https://avatar.iran.liara.run/public/13", 
     };
 
-    const response = await fetch("http://localhost:5050/user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // Specify the content type as JSON
-      },
-      body: JSON.stringify(player), // Convert the data to a JSON string
-    });
+    if (existingUser && existingUser.name === player.name) {
+      console.log("PATCHINGGG");
+      const updateResponse = await fetch(`http://localhost:5050/user?name=${input.value}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(player),
+      });
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+      if (!updateResponse.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      renderData();
+    } else {
+      console.log("POSTING");
+      const createResponse = await fetch("http://localhost:5050/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(player),
+      });
+
+      if (!createResponse.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      renderData();
     }
-
-    renderData();
-
+    
   } catch (error) {
     renderErrorState();
   }
@@ -47,7 +77,7 @@ function renderLoadingState() {
   console.log("Loading...");
 }
 
-function renderData(data) {
+function renderData() {
   const container = document.getElementById("data-container");
   container.innerHTML = ""; 
   const div = document.createElement("div");

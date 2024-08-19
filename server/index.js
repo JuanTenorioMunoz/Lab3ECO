@@ -13,12 +13,36 @@ app.get("/users", (request, response) => {
   response.send(db);
 });
 
+app.get("/user", (request, response) => {
+  const userName = request.query.name; 
+  const user = db.players.find(player => player.name === userName);
+
+  if (user) {
+    response.status(200).json(user);
+  } else {
+    response.status(404).send("User not found"); 
+  }
+});
+
 app.post("/user", (request, response) => {
   const { body } = request;
   db.players.push(body);
-  response.status(201).send(body); // We return the same object received and also I send a code 201 which means an object was created
+  response.status(201).send(body); 
+});
+
+app.patch("/user", (req, res) => {
+  const userName = req.query.name; 
+  const user = db.players.find(player => player.name === userName); 
+
+  if (user) {
+
+    Object.assign(user, req.body); 
+    res.status(200).json(user); 
+  } else {
+    res.status(404).send("User not found");
+  }
 });
 
 app.listen(5050, () => {
-  console.log(`Server is running on http://localhost:${5050}`);
+  console.log(`Server is running on http://localhost:5050`);
 });

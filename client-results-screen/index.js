@@ -38,10 +38,11 @@ function renderData(data) {
   if (data.players.length > 0) {
     data.players.forEach((item) => {
       const div = document.createElement("div");
+      const img = document.createElement("img");
       div.className = "item";
-      div.innerHTML = item.name;
-      //div.innerHTML = `<img src="${item.profilePicture}" /><p>${item.name}</p>` `<p>${item.option}</p>`;
+      div.innerHTML = item.name + item.option;
       container.appendChild(div);
+      container.appendChild(img)
     });
   }
 }
