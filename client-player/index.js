@@ -1,3 +1,20 @@
+// Initialize and connect to socket.io server
+const socket = io("http://localhost:5050");
+
+// Event listener for incoming messages
+socket.on("message", (message) => {
+  console.log("Received message:", message);
+  
+  // Display the message in the UI
+  const messageContainer = document.getElementById("message-container");
+  if (!messageContainer) {
+    const newContainer = document.createElement("div");
+    newContainer.id = "message-container";
+    document.body.appendChild(newContainer);
+  }
+  document.getElementById("message-container").innerHTML += `<p>${message}</p>`;
+});
+
 document.getElementById("post-button").addEventListener("click", createUser);
 const input = document.getElementById("input");
 
@@ -40,6 +57,9 @@ async function createUser() {
         throw new Error("Network response was not ok");
       }
 
+      // Emit a message to the server about the updated user
+      socket.emit('message', `User updated: ${input.value}`);
+      
       renderData();
     } else {
       console.log("POSTING");
@@ -55,6 +75,9 @@ async function createUser() {
         throw new Error("Network response was not ok");
       }
 
+      // Emit a message to the server about the new user
+      socket.emit('message', `New user created: ${input.value}`);
+      
       renderData();
     }
     
